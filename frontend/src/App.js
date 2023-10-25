@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Star from './assets/star.png'
 
 import api from './services/Api'
 
@@ -15,10 +16,12 @@ function App() {
   const [url, setUrl] = useState('');
   const [userFound, setUserFound] = useState(false);
   const [usersList, setUsersList] = useState([]);
+  const [favoriteUser, setFavoriteUser] = useState({});
   const [isAlphabeticOrder, setIsAlphaticOrder] = useState(false);
 
   useEffect(() => {
     getUsers();
+    getFavoriteUser();
   }, [])
 
   const handleChangeAlphabetic = () => {
@@ -81,14 +84,43 @@ function App() {
     }
   }
 
+  const addUserToFavorites = (user) => {
+    api.patch(`/user/favorite`, user)
+    .then(res => {
+      toast(`Usuário ${user.userName} adicionado aos favoritos.`, { autoClose: 4000 })
+
+      getUsers();
+      getFavoriteUser();
+    })
+    .catch(err => {
+      toast(`Falha em adicionar o usuário a lista.`, { autoClose: 4000 })
+    })
+  }
+
   const getUsers = () => {
     api.get(`users/`)
     .then(res => {
       setUsersList(res.data)
-      getUsers();
     })
     .catch(err => {
-      toast(`Falha em buscar os usuários.`, { autoClose: 4000 })
+      if (err.response.status == 404) {
+        toast(`Usuário ${userNameInput} não encontrado.`, { autoClose: 4000 })
+
+        setUserFound(false);
+      }
+    })
+  }
+
+  const getFavoriteUser = () => {
+    api.get(`user/favorite`)
+    .then(res => {
+      setFavoriteUser(res.data);
+      console.log(favoriteUser);
+    })
+    .catch(err => {
+      if (err.response.status != 404) {
+        toast(`Falha em buscar usuário favorito.`, { autoClose: 4000 })
+      }
     })
   }
 
@@ -98,7 +130,6 @@ function App() {
     .catch(err => {
       toast("Erro ao remover usuário ${username}")
     })
-
   }
 
   return (
@@ -127,13 +158,16 @@ function App() {
             <div className='w-11/12 '>
               <h2 className="text-2xl mb-2">Lista de usuários adicionados:</h2>
               <input value={isAlphabeticOrder} type='checkbox' onChange={handleChangeAlphabetic} /><label className='ml-1 text-xl'>Deseja ordenar os usuários alfabeticamente?</label>
-              <div className='flex items-center gap-x-4 mt-2'>
+              <div className='flex items-center gap-x-8 mt-2'>
                 {usersList.map((user) => (
                   <div key={user.userName} className='flex flex-col justify-center items-center bg-white rounded-2xl w-56'>
+                    {favoriteUser == user.userName && <img src={Star} className='absolute w-10 mb-10' />}
                     <img src={user.avatar} className='w-full rounded-2xl'/>
                     <h3 className="text-xl">Username: {user.userName}</h3>
                     <h3 className="text-xl">Nome: {user.name}</h3>
-                    <button onClick={() => window.location.href = `https://github.com/${user.userName}`} className="text-xl my-2 px-4 py-1 rounded-2xl">Github</button>
+                    {favoriteUser == user.userName && <h2 className="text-2xl my-2 px-4 py-1 rounded-2xl text-black font-bold underline">Usuário favorito</h2>}
+                    <button onClick={() => window.location.href = `https://github.com/${user.userName}`} className="text-xl my-2 px-4 py-1 rounded-2xl github">Github</button>
+                    {favoriteUser != user.userName && <button onClick={() => addUserToFavorites(user)} className="text-xl my-2 px-4 py-1 rounded-2xl">Favoritar Usuário</button>}
                     <button onClick={() => removeUser(user.userName)} className="text-xl my-2 px-4 py-1 rounded-2xl remove">Remover da lista</button>
                   </div>
                 ))}

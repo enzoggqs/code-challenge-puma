@@ -19,3 +19,13 @@ h3 {
   color: #15355E;
   font-weight: 500;
 }
+
+.remove {
+  background-color: #C23F32 !important;
+  color: white;
+}
+
+.github {
+  background-color: #0D1117 !important;
+  color: white;
+}
