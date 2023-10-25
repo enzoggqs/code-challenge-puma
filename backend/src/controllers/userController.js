@@ -29,4 +29,23 @@ export const userController = {
             return res.status(400).send({ msg: err.message});
         }
     },
+
+    async addUserToFavorites(req, res){
+        try{
+            userModels.addUserToFavorites(req.body);
+            return res.status(200).send(req.body);
+        }catch(err){
+            return res.status(400).send({ msg: err.message});
+        }
+    },
+
+    async listFavoriteUser(req, res){
+        try{
+            const favoriteUser = userModels.favoriteUser.userName;
+
+            return res.status(200).send(favoriteUser);
+        }catch(err){
+            return res.status(400).send({ msg: err.message});
+        }
+    },
 }
