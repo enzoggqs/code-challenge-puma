@@ -1,0 +1,23 @@
+{
+  "name": "back-sipav",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/enzoggqs/code-challenge-puma",
+  "author": "enzoggqs <eggqsaraiva@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "sucrase": "^3.34.0"
+  },
+  "type": "module"
+}
