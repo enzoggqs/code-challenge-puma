@@ -1,0 +1,21 @@
+.app-container {
+  background-color: #15355E;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+button {
+  background-color: #F7DB36;
+  color: #15355E;
+  font-weight: 700;
+}
+
+h3 {
+  color: #15355E;
+  font-weight: 500;
+}
